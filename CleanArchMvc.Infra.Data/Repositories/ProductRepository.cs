@@ -2,17 +2,14 @@
 using CleanArchMvc.Domain.Interfaces;
 using CleanArchMvc.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CleanArchMvc.Infra.Data.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        ApplicationDbContext _productContext;
+        private ApplicationDbContext _productContext;
         public ProductRepository(ApplicationDbContext context)
         {
             _productContext = context;
@@ -25,16 +22,20 @@ namespace CleanArchMvc.Infra.Data.Repositories
             return product;
         }
 
-        public async Task<Product> GetProductCategoryAsync(int? id)
+        public async Task<Product> GetByIdAsync(int? id)
         {
-            return await _productContext.Products.FindAsync(id);
+
+            //return await _productContext.Products.FindAsync(id);
+            return await _productContext.Products.Include(c => c.Category)
+                   .SingleOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<Product> GetProductCategoryAsync(int? id)
-        {
-            return await _productContext.Products.Include(c => c.Category)
-                .SingleOrDefaultAsync(p => p.Id == id);
-        }
+        //public async Task<Product> GetProductCategoryAsync(int? id)
+        //{
+        //    //eager loading
+        //    return await _productContext.Products.Include(c => c.Category)
+        //        .SingleOrDefaultAsync(p => p.Id == id);
+        //}
 
         public async Task<IEnumerable<Product>> GetProductsAsync()
         {

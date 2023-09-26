@@ -1,6 +1,7 @@
 ﻿using CleanArchMvc.Domain.Entities;
 using CleanArchMvc.Domain.Interfaces;
 using CleanArchMvc.Infra.Data.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace CleanArchMvc.Infra.Data.Repositories
 
         public async Task<IEnumerable<Category>> GetCategories()
         {
-            return await Task.Run(() => _categoryContext.Categories.ToList());
+            return await _categoryContext.Categories.ToListAsync();
         }
 
         public async Task<Category> Remove(Category category)
